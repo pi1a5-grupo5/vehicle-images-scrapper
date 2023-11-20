@@ -1,5 +1,7 @@
 const { Rembg } = require("rembg-node");
+console.log('Rembg', Rembg);
 const sharp = require("sharp");
+console.log('sharp', sharp);
 
 
 const removeBgFromImage = async (image) => {
