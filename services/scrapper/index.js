@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const download = require('../download');
-const { removeBgFromImage } = require('../removeBg');
+const { removeBgFromImage } = require('../removebg/index');
 const { NO_BACKGROUND_CONSTANT } = require('../../constants/imageTypes');
 const { uploadImage } = require('../s3');
 
