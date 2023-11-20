@@ -11,6 +11,15 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res
+    .status(200)
+    .send({
+      status: 200,
+      date: new Date()
+    });
+});
+
 app.post('/', async (req, res) => {
 
   const {
