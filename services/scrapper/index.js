@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const download = require('../download');
-const removeBg = require('../removeBg');
+const { removeBgFromImage } = require('../removeBg');
 const { NO_BACKGROUND_CONSTANT } = require('../../constants/imageTypes');
 const { uploadImage } = require('../s3');
 
@@ -57,7 +57,7 @@ const scrape = async (imageType, prompt) => {
   const destination = await download(srcImage, `./temp/${prompt.replace(/ /g, '_')}.png`);
 
   if (imageType === NO_BACKGROUND_CONSTANT) {
-    await removeBg(destination);
+    await removeBgFromImage(destination);
   }
 
   await browser.close();

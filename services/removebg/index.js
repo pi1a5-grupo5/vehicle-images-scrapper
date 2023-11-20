@@ -14,4 +14,6 @@ const removeBgFromImage = async (image) => {
   await output.png().toFile(image);
 }
 
-module.exports = removeBgFromImage;
+module.exports = {
+  removeBgFromImage,
+};
