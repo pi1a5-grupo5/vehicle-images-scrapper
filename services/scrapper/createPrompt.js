@@ -3,12 +3,11 @@ const { SPLASH_CONSTANT, NO_BACKGROUND_CONSTANT } = require('../../constants/ima
 const createPrompt = ({
   brand,
   model,
-  year,
   color
 }) => {
   return {
-    [SPLASH_CONSTANT]: `${brand} ${model} ${year} ${color} splash`,
-    [NO_BACKGROUND_CONSTANT]: `${brand} ${model} ${year} ${color} transparent background`
+    [SPLASH_CONSTANT]: `${brand} ${model} ${color} splash`,
+    [NO_BACKGROUND_CONSTANT]: `${brand} ${model} ${color} transparent background`
   }
 }
 

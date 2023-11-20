@@ -16,12 +16,11 @@ app.post('/', async (req, res) => {
   const {
     brand,
     model,
-    year,
     color
   } = req.body;
 
 
-  if (!brand || !model || !year || !color) {
+  if (!brand || !model || !color) {
     return res.status(400).send({
       message: 'Missing parameters',
       status: 400
@@ -29,7 +28,7 @@ app.post('/', async (req, res) => {
   }
 
   // Get from S3 bucket;
-  const imageExists = await verifyImageExists({ brand, model, year, color, imageType: IMAGE_TYPES[0] });
+  const imageExists = await verifyImageExists({ brand, model, color, imageType: IMAGE_TYPES[0] });
 
   if (imageExists) {
     return res.status(200).send({
@@ -39,7 +38,7 @@ app.post('/', async (req, res) => {
   };
 
   // If not found, create the prompt
-  const prompt = createPrompt({ brand, model, year, color });
+  const prompt = createPrompt({ brand, model, color });
 
   // Scrape the images
   await Promise.all(IMAGE_TYPES.map(async (imageType) => {

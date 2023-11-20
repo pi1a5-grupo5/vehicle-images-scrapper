@@ -17,7 +17,6 @@ const uploadImage = async ({ destination, prompt }) => {
   const {
     brand,
     model,
-    year,
     color
   } = desestructurePrompt(prompt);
 
@@ -26,7 +25,7 @@ const uploadImage = async ({ destination, prompt }) => {
 
   const params = {
     Bucket: 'carllet-car-assets',
-    Key: `${brand}/${model}/${year}/${color}/${prompt.replace(/ /g, '_')}.png`,
+    Key: `${brand.toLowerCase()}/${model.toLowerCase()}/${color.toLowerCase()}/${prompt.replace(/ /g, '_')}.png`,
     Body: fileContent,
     ACL: 'public-read'
   };
@@ -49,14 +48,14 @@ const uploadImage = async ({ destination, prompt }) => {
   });
 };
 
-const verifyImageExists = async ({ brand, model, year, color, imageType }) => {
-  const prompt = createPrompt({ brand, model, year, color });
+const verifyImageExists = async ({ brand, model, color, imageType }) => {
+  const prompt = createPrompt({ brand, model, color });
 
   console.log(imageType, 'prompt')
 
   const params = {
     Bucket: 'carllet-car-assets',
-    Key: `${brand}/${model}/${year}/${color}/${prompt[imageType].replace(/ /g, '_')}.png`
+    Key: `${brand.toLowerCase()}/${model.toLowerCase()}/${color.toLowerCase()}/${prompt[imageType].toLowerCase().replace(/ /g, '_')}.png`
   };
 
   const teste = s3.getObject(params, (err, data) => {
@@ -75,12 +74,11 @@ const verifyImageExists = async ({ brand, model, year, color, imageType }) => {
 };
 
 const desestructurePrompt = (prompt) => {
-  const [brand, model, year, color] = prompt.split(' ');
+  const [brand, model, color] = prompt.split(' ');
 
   return {
     brand,
     model,
-    year,
     color
   }
 }
