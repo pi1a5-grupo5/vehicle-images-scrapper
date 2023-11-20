@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const download = require('../download');
 const removeBg = require('../removeBg');
 const { NO_BACKGROUND_CONSTANT } = require('../../constants/imageTypes');
+const { uploadImage } = require('../s3');
 
 const MENU_ITEM_IMAGE_CONSTANT = 'Imagens'
 const CONTAINER_IMAGES_RESULT_CONSTANT = 'islrc'
@@ -54,13 +55,15 @@ const scrape = async (imageType, prompt) => {
   const srcImage = await page.evaluate(el => el.src, image);
 
 
-  const destination = await download(srcImage, `./temp/${prompt.replaceAll(' ', '_')}.png`);
+  const destination = await download(srcImage, `./temp/${prompt.replace(/ /g, '_')}.png`);
 
   if (imageType === NO_BACKGROUND_CONSTANT) {
     await removeBg(destination);
   }
 
   await browser.close();
+
+  await uploadImage({ destination, prompt });
 };
 
 module.exports = scrape;

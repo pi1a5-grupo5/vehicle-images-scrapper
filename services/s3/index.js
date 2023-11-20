@@ -1,8 +1,89 @@
-const uploadImage = async () => {
+const AWS = require('aws-sdk');
+const fs = require('fs');
+const createPrompt = require('../scrapper/createPrompt');
+const path = require('path');
+
+const dotenv = require('dotenv');
+dotenv.config({ path: path.join(__dirname, '../../.env') });
+
+const s3 = new AWS.S3({
+  region: 'us-east-2',
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
+
+const uploadImage = async ({ destination, prompt }) => {
+  const {
+    brand,
+    model,
+    year,
+    color
+  } = desestructurePrompt(prompt);
+
+
+  const fileContent = fs.readFileSync(destination);
+
+  const params = {
+    Bucket: 'carllet-car-assets',
+    Key: `${brand}/${model}/${year}/${color}/${prompt.replace(/ /g, '_')}.png`,
+    Body: fileContent,
+    ACL: 'public-read'
+  };
+
+  const uploaded = s3.upload(params, function (err, data) {
+    if (err) {
+      throw err;
+    }
+    console.log(`File uploaded successfully. ${data.Location}`);
+
+    return true;
+  });
+
+  return uploaded.promise().then((data) => {
+    return data;
+  }).catch((err) => {
+    throw err;
+  }).finally(() => {
+    fs.unlinkSync(destination);
+  });
 };
 
-const verifyImageExists = async () => {
+const verifyImageExists = async ({ brand, model, year, color, imageType }) => {
+  const prompt = createPrompt({ brand, model, year, color });
+
+  console.log(imageType, 'prompt')
+
+  const params = {
+    Bucket: 'carllet-car-assets',
+    Key: `${brand}/${model}/${year}/${color}/${prompt[imageType].replace(/ /g, '_')}.png`
+  };
+
+  const teste = s3.getObject(params, (err, data) => {
+    if (err) {
+      return false;
+    } else {
+      return true;
+    }
+  })
+
+  return teste.promise().then((data) => {
+    return true;
+  }).catch((err) => {
+    return false;
+  })
 };
+
+const desestructurePrompt = (prompt) => {
+  const [brand, model, year, color] = prompt.split(' ');
+
+  return {
+    brand,
+    model,
+    year,
+    color
+  }
+}
 
 module.exports = {
   uploadImage,

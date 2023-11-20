@@ -3,6 +3,7 @@ const createPrompt = require('./services/scrapper/createPrompt');
 const scrape = require('./services/scrapper');
 
 const { IMAGE_TYPES } = require('./constants/imageTypes');
+const { verifyImageExists, uploadImage } = require('./services/s3');
 
 const app = express();
 const port = 3000;
@@ -12,10 +13,22 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/', async (req, res) => {
 
-  const { brand, model, year, color } = req.body;
+  const {
+    brand = 'Nissan',
+    model = 'Versa',
+    year = '2020',
+    color = 'black'
+  } = req.body;
 
   // Get from S3 bucket;
+  const imageExists = await verifyImageExists({ brand, model, year, color, imageType: IMAGE_TYPES[0] });
 
+  if (imageExists) {
+    return res.status(200).send({
+      message: 'Image already exists',
+      status: 200
+    });
+  };
 
   // If not found, create the prompt
   const prompt = createPrompt({ brand, model, year, color });
@@ -25,8 +38,11 @@ app.get('/', async (req, res) => {
     return await scrape(imageType, prompt[imageType]);
   }));
 
-  // Upload to S3 bucket
-
+  // return created status
+  return res.status(201).send({
+    message: 'Image created',
+    status: 201
+  });
 });
 
 app.listen(port, () => {
