@@ -14,11 +14,19 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', async (req, res) => {
 
   const {
-    brand = 'Nissan',
-    model = 'Versa',
-    year = '2020',
-    color = 'black'
+    brand,
+    model,
+    year,
+    color
   } = req.body;
+
+
+  if (!brand || !model || !year || !color) {
+    return res.status(400).send({
+      message: 'Missing parameters',
+      status: 400
+    });
+  }
 
   // Get from S3 bucket;
   const imageExists = await verifyImageExists({ brand, model, year, color, imageType: IMAGE_TYPES[0] });
