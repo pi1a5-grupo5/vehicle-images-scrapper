@@ -6,7 +6,7 @@ const { Rembg } = require("rembg-node");
 const { NO_BACKGROUND_CONSTANT } = require('../../constants/imageTypes');
 const { uploadImage } = require('../s3');
 
-const MENU_ITEM_IMAGE_CONSTANT = 'Imagens'
+const MENU_ITEM_IMAGE_CONSTANT = 'Images'
 const CONTAINER_IMAGES_RESULT_CONSTANT = 'islrc'
 const FIRST_IMAGE_CONSTANT = 'PNCib'
 const SELECT_IMAGE_CONSTANT = 'iPVvYb'
@@ -25,7 +25,7 @@ const removeBgFromImage = async (image) => {
 
 const scrape = async (imageType, prompt) => {
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: false,
     args: ['--lang=pt-BR,pt']
   });
 
@@ -41,17 +41,9 @@ const scrape = async (imageType, prompt) => {
   // Wait for the image to load
   await page.waitForNavigation();
 
-  // Items menu
-  const itemsMenu = await page.waitForSelector('.MUFPAc');
-
-  // Click on the image item
-  const imageMenu = (await itemsMenu.$$('a'))
-    .find(async (item) => {
-      const itemText = await item.evaluate(el => el.textContent);
-      return itemText === MENU_ITEM_IMAGE_CONSTANT;
-    });
-
-  await imageMenu.click();
+  // Select the item menu with has a content of 'Imagens'
+  const [imagesItemMenu] = await page.$x(`//a[contains(., '${MENU_ITEM_IMAGE_CONSTANT}')]`);
+  await imagesItemMenu.click();
 
   // Wait for the images to load
   await page.waitForNavigation();
