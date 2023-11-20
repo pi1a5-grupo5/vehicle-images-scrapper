@@ -25,9 +25,10 @@ const uploadImage = async ({ destination, prompt }) => {
 
   const params = {
     Bucket: 'carllet-car-assets',
-    Key: `${brand.toLowerCase()}/${model.toLowerCase()}/${color.toLowerCase()}/${prompt.replace(/ /g, '_')}.png`,
+    Key: `${brand.toLowerCase()}/${model.toLowerCase()}/${color.toLowerCase()}/${prompt.toLowerCase().replace(/ /g, '_')}.png`,
     Body: fileContent,
-    ACL: 'public-read'
+    ACL: 'public-read',
+    ContentType: 'image/png'
   };
 
   const uploaded = s3.upload(params, function (err, data) {
@@ -50,8 +51,6 @@ const uploadImage = async ({ destination, prompt }) => {
 
 const verifyImageExists = async ({ brand, model, color, imageType }) => {
   const prompt = createPrompt({ brand, model, color });
-
-  console.log(imageType, 'prompt')
 
   const params = {
     Bucket: 'carllet-car-assets',
