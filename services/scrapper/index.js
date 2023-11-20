@@ -41,7 +41,7 @@ const scrape = async (imageType, prompt) => {
   await page.waitForNavigation();
 
   // Items menu
-  const itemsMenu = await page.waitForSelector('.GKS7s');
+  const itemsMenu = await page.waitForSelector('.MUFPAc');
 
   // Click on the image item
   const imageMenu = (await itemsMenu.$$('a'))
