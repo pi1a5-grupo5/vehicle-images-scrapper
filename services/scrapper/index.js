@@ -25,8 +25,7 @@ const removeBgFromImage = async (image) => {
 
 const scrape = async (imageType, prompt) => {
   const browser = await puppeteer.launch({
-    headless: false,
-    args: ['--lang=pt-BR,pt']
+    headless: 'new'
   });
 
   const page = await browser.newPage();
