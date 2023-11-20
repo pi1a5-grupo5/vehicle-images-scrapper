@@ -11,7 +11,7 @@ const SELECT_IMAGE_CONSTANT = 'iPVvYb'
 
 const scrape = async (imageType, prompt) => {
   const browser = await puppeteer.launch({
-    headless: false
+    headless: 'new'
   });
 
   const page = await browser.newPage();
@@ -53,7 +53,6 @@ const scrape = async (imageType, prompt) => {
   // Get the image
   const image = await page.waitForSelector(`.${SELECT_IMAGE_CONSTANT}`);
   const srcImage = await page.evaluate(el => el.src, image);
-
 
   const destination = await download(srcImage, `./temp/${prompt.replace(/ /g, '_')}.png`);
 
