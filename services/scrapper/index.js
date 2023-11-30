@@ -6,7 +6,7 @@ const { Rembg } = require("rembg-node");
 const { NO_BACKGROUND_CONSTANT } = require('../../constants/imageTypes');
 const { uploadImage } = require('../s3');
 
-const MENU_ITEM_IMAGE_CONSTANT = 'Images'
+const MENU_ITEM_IMAGE_CONSTANT = 'Imagens'
 const CONTAINER_IMAGES_RESULT_CONSTANT = 'islrc'
 const FIRST_IMAGE_CONSTANT = 'PNCib'
 const SELECT_IMAGE_CONSTANT = 'iPVvYb'
@@ -25,7 +25,7 @@ const removeBgFromImage = async (image) => {
 
 const scrape = async (imageType, prompt) => {
   const browser = await puppeteer.launch({
-    headless: 'new'
+    headless: false
   });
 
   const page = await browser.newPage();
